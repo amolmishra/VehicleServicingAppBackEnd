@@ -231,8 +231,8 @@ class DB_Functions {
     }
 
     // create service center
-    public function createServiceCenter($name, $email, $phone, $address, $company) {
-        $stmt = $this->conn->prepare("INSERT INTO service_centers (name, address, phone, company, email) VALUES('$name', '$address', '$phone', '$company', '$email')");
+    public function createServiceCenter($name, $email, $phone, $address, $company, $latitude, $longitude) {
+        $stmt = $this->conn->prepare("INSERT INTO service_centers (name, address, phone, company, email, lat, lon) VALUES('$name', '$address', '$phone', '$company', '$email', '$latitude', '$longitude')");
         $result = $stmt->execute();
         $stmt->close();
 
@@ -259,6 +259,24 @@ class DB_Functions {
                 $i++;
         }
         return $cars;
+    }
+
+    // get service center latitude
+    public function getCenterLat($centerid) {
+        $stmt = $this->conn->prepare("SELECT * FROM service_centers WHERE id = '$centerid'");
+        $stmt->execute();
+        $latitude = $stmt->get_result()->fetch_assoc()['lat'];
+        $stmt->close();
+        return $latitude;
+    }
+
+    // get service center longitude
+    public function getCenterLong($centerid) {
+        $stmt = $this->conn->prepare("SELECT * FROM service_centers WHERE id = '$centerid'");
+        $stmt->execute();
+        $longitude = $stmt->get_result()->fetch_assoc()['lon'];
+        $stmt->close();
+        return $longitude;
     }
 
 }

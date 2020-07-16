@@ -1,18 +1,21 @@
 <?php
 require('include/PHPMailer.php');
 require('include/SMTP.php');
+require('include/DB_Function.php');
+$db = new DB_Functions();
 $mail = new PHPMailer\PHPMailer\PHPMailer();
-
 //json response array
 $response = array("error" => false);
 
 if (isset($_POST['email']) && isset($_POST['registered_car_id']) && isset($_POST['date']) && isset($_POST['time']) && isset($_POST['centerid']) && isset($_POST['pickup']) && isset($_POST['charges'])) {
 
+	$lat = $db->getCenterLat($_POST['centerid']);
+	$lon = $db->getCenterLong($_POST['centerid']);
 	$subject = "Booking Confirmation for Vehicle Servicing";
 
 	$content = "<p>Dear ".$_POST['name'].",
 			<br/>
-    This is to confirm that you booking has been confirmed successfully.
+    This is to inform you that your booking has been confirmed successfully.
 			<br/>
     Following are the details:
 			<br/>
@@ -23,7 +26,7 @@ if (isset($_POST['email']) && isset($_POST['registered_car_id']) && isset($_POST
 			<br/>
     Time:      ".$_POST['time']."
 			<br/>
-	Center:    ".$_POST['centerid']."
+	Center:    ".$_POST['centerdetails']."
 			<br/>
 	Pickup:    ".$_POST['pickup']."
 			<br/>
@@ -34,6 +37,11 @@ if (isset($_POST['email']) && isset($_POST['registered_car_id']) && isset($_POST
 Please feel free to contact us in case of any queries.
 			<br/>
 			<br/>
+Please follow this link to get to the service center: http://maps.google.com/maps?q=".$lat.",".$lon."
+
+			<br/>
+			<br/>
+			<br/>
 Thanks,
 			<br/>
 Manisa Das,
@@ -42,7 +50,6 @@ Vehicle Service
 			<br/>
 Pune
 		</p>";
-
 
 
 
