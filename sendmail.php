@@ -1,7 +1,8 @@
 <?php
-require('include/PHPMailer.php');
-require('include/SMTP.php');
-require('include/DB_Function.php');
+require('./include/PHPMailer.php');
+require('./include/SMTP.php');
+require('./include/DB_Function.php');
+require('./include/Exception.php');
 $db = new DB_Functions();
 $mail = new PHPMailer\PHPMailer\PHPMailer();
 //json response array
@@ -54,15 +55,14 @@ Pune
 
 
 
-	$mail->IsSMTP();
-	$mail->SMTPDebug = 0;
-	$mail->SMTPAuth = TRUE;
-	$mail->SMTPSecure = "tls";
-	$mail->Port     = 587;  
+    $mail->SMTPDebug = 1; // debugging: 1 = errors and messages, 2 = messages only
+    $mail->SMTPAuth = true; // authentication enabled
+    $mail->SMTPSecure = 'ssl'; // secure transfer enabled REQUIRED for GMail
+    $mail->Host = "ssl://smtp.gmail.com";
+    $mail->Port = 465; // or 587
+    $mail->IsHTML(true);
 	$mail->Username = "lisl.12amol@gmail.com";
 	$mail->Password = "H5JLdVyzZyrTe4";
-	$mail->Host     = "smtp.gmail.com";
-	$mail->Mailer   = "smtp";
 	$mail->SetFrom("manisa@vehicleService.com", "Vehicle Service Application");
 	$mail->AddReplyTo("manisa@vehicleService.com", "Vehicle Service Application");
 	$mail->AddAddress($_POST['email']);
@@ -83,7 +83,7 @@ Pune
 
 } else {
 	$response["error"] = false;
-    $response["error-msg"] = "Confirmation mail was not sent!";
+    $response["error-msg"] = "Data not available to send confirmation email!";
     echo json_encode($response);
 }
 ?>
